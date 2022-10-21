@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import Footer from './Footer'
 import Header from './Header'
 import Main from './Main'
 
@@ -8,6 +9,7 @@ const App = () => {
         <BrowserRouter>
             <Header/>
             <Main/>
+            <Footer/>
         </BrowserRouter>
     )
 }

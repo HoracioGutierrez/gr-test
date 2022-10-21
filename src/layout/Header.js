@@ -9,13 +9,13 @@ const Header = () => {
   return (
     <header className='header'>
       <h1 className='header__title'>GR Test</h1>
-      <nav className='nav'>
-        <Link className='nav__link' to="/">home</Link>
-        {!logged && <Link className='nav__link' to="/login">login</Link>}
-        {!logged && <Link className='nav__link' to="/register">register</Link>}
-        {logged && <Link className='nav__link' to="/users">users</Link>}
-        {logged && <Link className='nav__link' to="/profile">profile</Link>}
-        {logged && <Link className='nav__link' to="/logout">logout</Link>}
+      <nav className='headernav'>
+        <Link className='headernav__link' to="/">home</Link>
+        {!logged && <Link className='headernav__link' to="/login">login</Link>}
+        {!logged && <Link className='headernav__link' to="/register">register</Link>}
+        {logged && <Link className='headernav__link' to="/users">users</Link>}
+        {logged && <Link className='headernav__link' to="/profile">profile</Link>}
+        {logged && <Link className='headernav__link' to="/logout">logout</Link>}
       </nav>
     </header>
   )

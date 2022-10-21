@@ -6,6 +6,7 @@ import Login from '../pages/Login'
 import Logout from '../pages/Logout'
 import Profile from '../pages/Profile'
 import Register from '../pages/Register'
+import UserProfile from '../pages/UserProfile'
 import Users from '../pages/Users'
 
 const PublicRoute = ({ children }) => {
@@ -46,6 +47,11 @@ const Main = () => {
                 <Route path="/profile" element={
                     <PrivateRoute>
                         <Profile />
+                    </PrivateRoute>
+                } />
+                <Route path="/users/:id" element={
+                    <PrivateRoute>
+                        <UserProfile />
                     </PrivateRoute>
                 } />
                 <Route path="*" element={<div>404</div>} />
