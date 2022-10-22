@@ -88,7 +88,7 @@ export const getMessages = async (id,uid) => {
     try {
         const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains-any', [uid,id])))
         const docs = snapShot.docs
-        return docs.map(doc => doc.data())[0]
+        return docs.map(doc => doc.data())[0] || {messages:[], participants:[id,uid]}
     } catch (error) {
         console.log(error)
         return false
