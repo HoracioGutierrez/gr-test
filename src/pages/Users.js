@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import useUsersStore from '../api/usersStore'
 import Page from '../layout/Page'
 import { getUsersByDistance, updateUserLocation } from '../utils'
+import UserListLoader from '../widgets/UserListLoader'
 
 
 const Users = () => {
@@ -34,10 +35,10 @@ const Users = () => {
         }
     }
 
-    if (!users.length) return <Page title="Users" noTitle={true}><div>Loading...</div></Page>
+    if (!users.length) return <Page title="Users" noTitle={true}><UserListLoader/></Page>
 
     return (
-        <Page title='Users'>
+        <Page title='Users' noTitle>
             <div className='userlist'>
                 {users.map(user => (
                     <article key={user.uid} className="userlist__card">
