@@ -84,11 +84,22 @@ export const getUserInfo = async (uid) => {
     }
 }
 
-export const getMessages = async (id,uid) => {
+export const getPrivateMessages = async (id,uid) => {
     try {
         const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains-any', [uid,id])))
         const docs = snapShot.docs
         return docs.map(doc => doc.data())[0] || {messages:[], participants:[id,uid]}
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
+export const getMessages = async (id) => {
+    try {
+        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains', id)))
+        const docs = snapShot.docs
+        return docs.map(doc => doc.data())
     } catch (error) {
         console.log(error)
         return false

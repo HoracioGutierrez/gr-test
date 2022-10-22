@@ -3,26 +3,16 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useUsersStore from '../api/usersStore';
-import { getMessages, sendMessage } from '../utils';
+import { queryClient } from '../layout/App';
+import { getPrivateMessages, sendMessage } from '../utils';
 
 const MessagesPrivate = () => {
 
+    queryClient.invalidateQueries()
     const { id } = useParams();
-    const [messages, setMessages] = useState({ messages: [] });
     const [currentMessage, setCurrentMessage] = useState('');
     const { uid } = useUsersStore(({ current }) => current);
-    const { data } = useQuery(['messages'], getMessages.bind(null, id, uid), { refetchInterval: 500 });
-
-
-
-    useEffect(() => {
-        handleMessages();
-    }, []);
-
-    const handleMessages = async () => {
-        const messages = await getMessages(id, uid);
-        setMessages(messages);
-    }
+    const { data } = useQuery(['messagePrivate'], getPrivateMessages.bind(null, id, uid), { refetchInterval: 500 });
 
     const handleChange = (e) => {
         setCurrentMessage(e.target.value);
