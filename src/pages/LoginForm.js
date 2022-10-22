@@ -33,17 +33,17 @@ const LoginForm = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
+        <form onSubmit={handleSubmit} className="form">
+            <div className='form__control'>
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Email" onChange={handleEmailChange} value={email} autoComplete="email" />
+                <input className='form__input' type="email" id="email" name="email" placeholder="Email" onChange={handleEmailChange} value={email} autoComplete="email" />
             </div>
-            <div>
+            <div className='form__control'>
                 <label htmlFor="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Password" onChange={handlePasswordChange} value={password} autoComplete="current-password" />
+                <input className='form__input' type="password" id="password" name="password" placeholder="Password" onChange={handlePasswordChange} value={password} autoComplete="current-password" />
             </div>
-            <div>
-                <button type="submit">Login</button>
+            <div className='form__control'>
+                <button className='form__submit-button' type="submit">Login</button>
             </div>
         </form>
     )

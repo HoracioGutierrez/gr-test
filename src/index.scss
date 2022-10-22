@@ -52,7 +52,6 @@ body {
 
 .userlist {
     display: grid;
-    //three columns same width
     grid-template-columns: repeat(3, calc((100% - 1rem) / 3) );
     grid-gap: 0.5rem;
     padding: 1rem 0;
@@ -96,6 +95,39 @@ body {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem 0;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form__control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form__input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.form__submit-button {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: rgb(14, 14, 14);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form__submit-button:hover {
+    background: #ccc;
+    color: black;
 }
 
 .profileform__control {
@@ -237,4 +269,23 @@ body {
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
     align-self: flex-start;
+}
+
+.flex {
+    display: flex;
+}
+
+.landing-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 3px;
+    position: absolute;
+    top : 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    background-color: white;
+    width: calc(100% - 2rem);
 }
