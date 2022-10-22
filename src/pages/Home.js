@@ -10,7 +10,7 @@ const Home = () => {
   if(!logged) return <HomeForm/>
 
   return (
-    <Page title='Welcome!'>
+    <Page noTitle>
 
     </Page>
   )

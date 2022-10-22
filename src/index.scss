@@ -29,7 +29,16 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
+}
+
+.header__title {
+    width: 40px;
+    height: 40px;
+}
+
+.header__title img {
+    width: 100%;
 }
 
 .headernav {
@@ -44,7 +53,6 @@ body {
 
 .main {
     flex-grow: 1;
-    padding: 1rem;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -251,7 +259,6 @@ body {
 }
 
 .message {
-    //the message is on the right , with an orange background and little radius and padding
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -288,6 +295,7 @@ body {
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     background-color: white;
     width: calc(100% - 2rem);
+    max-width: 400px;
 }
 
 .landing-form__actions {
@@ -300,4 +308,10 @@ body {
 .landing-form__link {
     text-decoration: none;
     color: black;
+}
+
+.header__btn {
+    border: none;
+    outline: none;
+    margin-left: 1rem;
 }
