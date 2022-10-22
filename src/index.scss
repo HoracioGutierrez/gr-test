@@ -102,7 +102,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 1rem 0;
+    padding: 1rem 0.5rem;
 }
 
 .form {
@@ -223,19 +223,27 @@ body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 116px);
 }
 
 .messages-list {
     flex-grow: 1;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    /* max-height: calc(100vh - 220px); */
 }
 
 .messages-textarea {
     position: relative;
+}
+
+.messages-textarea form {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .messages-textarea textarea {
@@ -244,7 +252,7 @@ body {
     min-height: 100px;
     padding: 1rem;
     border: 1px solid #ccc;
-    border-radius: 0.5rem;
+    /* border-radius: 0.5rem; */
 }
 
 .messages-textarea button {
@@ -327,5 +335,9 @@ body {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 1rem;
+    padding: 0.5rem;
+}
+
+.loader-form {
     padding: 0.5rem;
 }

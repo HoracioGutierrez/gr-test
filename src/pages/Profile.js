@@ -4,6 +4,7 @@ import { db } from '../api/firebase'
 import useUsersStore from '../api/usersStore'
 import Page from '../layout/Page'
 import { updateUserInfo } from '../utils'
+import ProfileLoader from '../widgets/ProfileLoader'
 
 const Profile = () => {
 
@@ -37,9 +38,7 @@ const Profile = () => {
         await updateUserInfo(uid, userData)
     }
 
-    console.log(userData)
-
-    if (!userData) return <Page title="Profile" noTitle={true}><div>Loading...</div></Page>
+    if (!userData) return <Page title="Profile" noTitle={true}><ProfileLoader/></Page>
 
     return (
         <Page title='Profile'>
