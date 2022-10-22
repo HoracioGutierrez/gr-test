@@ -255,10 +255,14 @@ body {
     /* border-radius: 0.5rem; */
 }
 
-.messages-textarea button {
+.messages-actions {
     position: absolute;
     bottom: 1rem;
     right: 1rem;
+    display: flex;
+}
+
+.messages-textarea button {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 0.5rem;
@@ -270,6 +274,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.message img {
+    width: 100%;
 }
 
 .message_right {

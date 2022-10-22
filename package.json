@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/camera": "^4.1.3",
     "@tanstack/react-query": "^4.13.0",
     "cleave.js": "^1.6.0",
     "firebase": "^9.12.1",
