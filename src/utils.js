@@ -1,4 +1,4 @@
-import { collection, endAt, GeoPoint, getDocs, orderBy, query, startAt, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, endAt, GeoPoint, getDocs, orderBy, query, startAt, updateDoc, where } from "firebase/firestore";
 import { db } from "./api/firebase";
 import * as geofire from 'geofire-common';
 
@@ -78,6 +78,38 @@ export const getUserInfo = async (uid) => {
         const snapShot = await getDocs(query(collection(db, 'users'), where('uid', '==', uid)))
         const doc = snapShot.docs[0]
         return doc.data()
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
+export const getMessages = async (id,uid) => {
+    try {
+        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains-any', [uid,id])))
+        const docs = snapShot.docs
+        return docs.map(doc => doc.data())[0]
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
+export const sendMessage = async (uid, message) => {
+    try {
+        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains-any', [message.sender, message.receiver])))
+        const doc = snapShot.docs[0]
+        if (doc) {
+            await updateDoc(doc.ref, {
+                messages: [...doc.data().messages, message]
+            })
+        } else {
+            await addDoc(collection(db, 'messages'), {
+                participants: [message.sender, message.receiver],
+                messages: [message]
+            })
+        }
+        return true
     } catch (error) {
         console.log(error)
         return false

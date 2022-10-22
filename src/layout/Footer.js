@@ -4,7 +4,7 @@ import useUsersStore from '../api/usersStore'
 
 const Footer = () => {
 
-    const logged = useUsersStore(({ loggued }) => loggued)
+    const logged = useUsersStore(({ logged }) => logged)
 
     if(!logged) return null
 

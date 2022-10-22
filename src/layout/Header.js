@@ -4,7 +4,7 @@ import useUsersStore from '../api/usersStore'
 
 const Header = () => {
 
-  const logged = useUsersStore(({ loggued }) => loggued)
+  const logged = useUsersStore(({ logged }) => logged)
 
   return (
     <header className='header'>

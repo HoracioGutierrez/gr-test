@@ -4,18 +4,20 @@ import useUsersStore from '../api/usersStore'
 import Home from '../pages/Home'
 import Login from '../pages/Login'
 import Logout from '../pages/Logout'
+import Messages from '../pages/Messages'
+import MessagesPrivate from '../pages/MessagesPrivate'
 import Profile from '../pages/Profile'
 import Register from '../pages/Register'
 import UserProfile from '../pages/UserProfile'
 import Users from '../pages/Users'
 
 const PublicRoute = ({ children }) => {
-    const logged = useUsersStore(({ loggued }) => loggued)
+    const logged = useUsersStore(({ logged }) => logged)
     return logged ? <Navigate to="/" /> : children
 }
 
 const PrivateRoute = ({ children }) => {
-    const logged = useUsersStore(({ loggued }) => loggued)
+    const logged = useUsersStore(({ logged }) => logged)
     return logged ? children : <Navigate to="/login" />
 }
 
@@ -52,6 +54,17 @@ const Main = () => {
                 <Route path="/users/:id" element={
                     <PrivateRoute>
                         <UserProfile />
+                    </PrivateRoute>
+                } />
+                {/* /messages/:id */}
+                <Route path="/messages" element={
+                    <PrivateRoute>
+                        <Messages/>
+                    </PrivateRoute>
+                } />
+                <Route path="/messages/:id" element={
+                    <PrivateRoute>
+                        <MessagesPrivate/>
                     </PrivateRoute>
                 } />
                 <Route path="*" element={<div>404</div>} />

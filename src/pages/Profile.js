@@ -71,6 +71,11 @@ const Profile = () => {
                     <input type="number" name="age" id="age" value={userData.age} onChange={handleChange} />
                 </div>
 
+                <div className='profileform__control'>
+                    <label htmlFor="description">Description</label>
+                    <textarea name="description" id="description" value={userData.description} onChange={handleChange} />
+                </div>
+
                 <button>Update</button>
 
             </form>
