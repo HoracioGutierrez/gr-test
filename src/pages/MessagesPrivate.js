@@ -63,7 +63,7 @@ const MessagesPrivate = () => {
                 {data && data.messages.map((message, i) => (
                     <div key={i} className={`message ${message.sender === uid ? 'message--sent' : 'message--received'}`}>
                         <div className={`message__content ${message.sender == uid ? "message_right" : "message_left"}`}>
-                            {message.image ? <img src={`data:image/jpeg;base64,${message.message}`} alt="" /> : message.message}
+                            {message.image ? <img src={`${message.message}`} alt="" /> : message.message}
                         </div>
                     </div>
                 ))}
