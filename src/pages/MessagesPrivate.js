@@ -1,7 +1,9 @@
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { useQuery } from '@tanstack/react-query';
+import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { storage } from '../api/firebase';
 import useUsersStore from '../api/usersStore';
 import { queryClient } from '../layout/App';
 import { getPrivateMessages, sendMessage } from '../utils';
@@ -31,19 +33,29 @@ const MessagesPrivate = () => {
             sendMessage(id, message)
                 .then(() => {
                     setCurrentMessage('');
-                    handleMessages();
                 })
         }
     }
 
     const handleCamera = async () => {
         const image = await Camera.getPhoto({
-            quality: 90,
-            allowEditing: false,
-            resultType: CameraResultType.Base64
+            quality: 10,
+            allowEditing: true,
+            width : 300,
+            height : 300,
+            resultType: CameraResultType.Base64,
+            webUseInput: true
         });
+
+        var imageUrl = image.base64String;
+        const imageLoc = `/images/${Math.random()}.${image.format}`;
+
+        const uploadTask = await uploadString(ref(storage, imageLoc), imageUrl, 'base64');
+
+        const url = await getDownloadURL(uploadTask.ref);
+
         const message = {
-            message: image.base64String,
+            message: url,
             sender: uid,
             receiver: id,
             timestamp: Date.now(),
@@ -53,7 +65,6 @@ const MessagesPrivate = () => {
         sendMessage(id, message)
             .then(() => {
                 setCurrentMessage('');
-                handleMessages();
             })
     }
 
