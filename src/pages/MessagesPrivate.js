@@ -1,4 +1,5 @@
 import { Camera, CameraResultType } from '@capacitor/camera';
+import { useFirestoreQuery, useFirestoreQueryData } from '@react-query-firebase/firestore';
 import { useQuery } from '@tanstack/react-query';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
@@ -6,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { storage } from '../api/firebase';
 import useUsersStore from '../api/usersStore';
 import { queryClient } from '../layout/App';
-import { getPrivateMessages, sendMessage } from '../utils';
+import { getPrivateMessages, getPrivateMessagesQueryRef, sendMessage } from '../utils';
 
 const MessagesPrivate = () => {
 
@@ -15,6 +16,8 @@ const MessagesPrivate = () => {
     const [currentMessage, setCurrentMessage] = useState('');
     const { uid } = useUsersStore(({ current }) => current);
     const { data } = useQuery(['messagePrivate'], getPrivateMessages.bind(null, id, uid), { refetchInterval: 500 });
+    //const query = useFirestoreQueryData(['messagePrivate'], getPrivateMessagesQueryRef(id, uid));
+
 
     const handleChange = (e) => {
         setCurrentMessage(e.target.value);
@@ -33,6 +36,9 @@ const MessagesPrivate = () => {
             sendMessage(id, message)
                 .then(() => {
                     setCurrentMessage('');
+                }) 
+                .catch((error) => {
+                    console.log(error);
                 })
         }
     }

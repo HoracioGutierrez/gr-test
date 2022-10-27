@@ -1,52 +1,54 @@
 import { addDoc, collection, endAt, GeoPoint, getDocs, orderBy, query, startAt, updateDoc, where } from "firebase/firestore";
 import { db } from "./api/firebase";
 import * as geofire from 'geofire-common';
+import geohash from 'ngeohash';
 
-export const getUsersByDistance = async (latitude, longitude) => {
+export const getUsersByDistance = async (uid, latitude, longitude) => {
+ 
+    const lat = 0.0144927536231884; // degrees latitude per mile
+    const lon = 0.0181818181818182; // degrees longitude per mile
+    const distance = 10;
+    const lowerLat = latitude - (lat * distance);
+    const lowerLon = longitude - (lon * distance);
+    const greaterLat = latitude + (lat * distance);
+    const greaterLon = longitude + (lon * distance);
 
-    const center = [latitude, longitude]
+    const lower = geohash.encode(lowerLat, lowerLon);
+    const greater = geohash.encode(greaterLat, greaterLon);
+
+    const range = { lower, greater }
+
+    const q = collection(db, 'users')
+    const q2 = query(q,where("location.hash","<=",range.greater),where("location.hash",">=",range.lower))
+
+    const snap = await getDocs(q2);
+
+    const users = []
     const radiusInM = 50 * 1000;
-    const bounds = geofire.geohashQueryBounds(center, radiusInM);
+    const center = [latitude, longitude]
 
-    const promises = [];
-
-    for (const b of bounds) {
-        const q = collection(db, 'users')
-        const q2 = query(q, orderBy("location.hash"), startAt(b[0]), endAt(b[1]))
-        promises.push(getDocs(q2));
-    }
-
-    const snap = await Promise.all(promises);
-
-    const matchingDocs = [];
-    for (const s of snap) {
-        for (const doc of s.docs) {
-            const distanceInKm = geofire.distanceBetween(center, [doc.data().location.latitude, doc.data().location.longitude]);
-            const distanceInM = distanceInKm * 1000;
-            if (distanceInM <= radiusInM) {
-                matchingDocs.push({doc, distanceInM});
-            }
-        }
-    }
-
-    const users = matchingDocs.map(doc => {
-        return {
-            id: doc.id,
-            ...doc.doc.data(),
-            distance: doc.distanceInM
+    snap.forEach(doc => {
+        const distanceInKm = geofire.distanceBetween(center, [doc.data().location.latitude, doc.data().location.longitude]);
+        const distanceInM = distanceInKm * 1000;
+        if(distanceInM <= radiusInM){
+            users.push({
+                id: doc.id,
+                distance: distanceInM,
+                ...doc.data()
+            })
         }
     })
 
-    return users
+    return users.filter(user => user.uid !== uid).sort((a, b) => a.distance - b.distance);
 }
 
-export const updateUserLocation = async (uid,latitude, longitude) => {
+export const updateUserLocation = async (uid, latitude, longitude) => {
     try {
         const snapShot = await getDocs(query(collection(db, 'users'), where('uid', '==', uid)))
         const doc = snapShot.docs[0]
         await updateDoc(doc.ref, {
             location: {
-                hash: geofire.geohashForLocation([latitude, longitude]),
+                hash : geohash.encode(latitude, longitude),
                 latitude: latitude,
                 longitude: longitude,
                 geoPoint: new GeoPoint(latitude, longitude)
@@ -84,15 +86,19 @@ export const getUserInfo = async (uid) => {
     }
 }
 
-export const getPrivateMessages = async (id,uid) => {
+export const getPrivateMessages = async (id, uid) => {
     try {
-        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains-any', [uid,id])))
+        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains', [uid, id])))
         const docs = snapShot.docs
-        return docs.map(doc => doc.data())[0] || {messages:[], participants:[id,uid]}
+        return docs.map(doc => doc.data())[0] || { messages: [], participants: [id, uid] }
     } catch (error) {
         console.log(error)
         return false
     }
+}
+
+export const getPrivateMessagesQueryRef = async (id, uid) => {
+    return query(collection(db, 'messages'), where('participants', 'array-contains', [uid, id]))
 }
 
 export const getMessages = async (id) => {
@@ -108,18 +114,20 @@ export const getMessages = async (id) => {
 
 export const sendMessage = async (uid, message) => {
     try {
-        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains-any', [message.sender, message.receiver])))
+        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains', [message.sender, message.receiver])))
         const doc = snapShot.docs[0]
         if (doc) {
             await updateDoc(doc.ref, {
                 messages: [...doc.data().messages, message]
             })
         } else {
-            await addDoc(collection(db, 'messages'), {
+            const res = await addDoc(collection(db, 'messages'), {
                 participants: [message.sender, message.receiver],
                 messages: [message]
             })
+            console.log(res)
         }
+        console.log(doc)
         return true
     } catch (error) {
         console.log(error)

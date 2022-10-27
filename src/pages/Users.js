@@ -27,7 +27,7 @@ const Users = () => {
     const handleGetUsers = async (latitude, longitude) => {
         try {
             await updateUserLocation(uid, latitude, longitude)
-            const users = await getUsersByDistance(latitude, longitude)
+            const users = await getUsersByDistance(uid,latitude, longitude)
             setUsers(users)
             setLocalUsers(users)
         } catch (error) {
