@@ -87,9 +87,12 @@ export const getUserInfo = async (uid) => {
 }
 
 export const getPrivateMessages = async (id, uid) => {
+
+    console.log({uid, id})
     try {
-        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains', [uid, id])))
+        const snapShot = await getDocs(query(collection(db, 'messages'), where(`participants.${uid}`, '==', true), where(`participants.${id}`, '==', true)))
         const docs = snapShot.docs
+        console.log(docs)
         return docs.map(doc => doc.data())[0] || { messages: [], participants: [id, uid] }
     } catch (error) {
         console.log(error)
@@ -98,12 +101,13 @@ export const getPrivateMessages = async (id, uid) => {
 }
 
 export const getPrivateMessagesQueryRef = async (id, uid) => {
-    return query(collection(db, 'messages'), where('participants', 'array-contains', [uid, id]))
+    return query(collection(db, 'messages'), where('participants', '==', {id:true, uid:true}))
 }
 
 export const getMessages = async (id) => {
     try {
-        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains', id)))
+        //const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains', id)))
+        const snapShot = await getDocs(query(collection(db, 'messages'), where(`participants.${id}`, '==', true)))
         const docs = snapShot.docs
         return docs.map(doc => doc.data())
     } catch (error) {
@@ -114,7 +118,8 @@ export const getMessages = async (id) => {
 
 export const sendMessage = async (uid, message) => {
     try {
-        const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains', [message.sender, message.receiver])))
+        //const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', '==', {[message.sender]:true, [message.receiver] : true})))
+        const snapShot = await getDocs(query(collection(db, 'messages'), where(`participants.${message.sender}`, '==', true), where(`participants.${message.receiver}`, '==', true)))
         const doc = snapShot.docs[0]
         if (doc) {
             await updateDoc(doc.ref, {
@@ -122,7 +127,7 @@ export const sendMessage = async (uid, message) => {
             })
         } else {
             const res = await addDoc(collection(db, 'messages'), {
-                participants: [message.sender, message.receiver],
+                participants: {[message.sender]:true, [message.receiver]:true},
                 messages: [message]
             })
             console.log(res)
