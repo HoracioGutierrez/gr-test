@@ -9,7 +9,7 @@ export const queryClient = new QueryClient()
 
 const App = () => {
     return (
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient} contextSharing>
             <BrowserRouter>
                 <Header />
                 <Main />

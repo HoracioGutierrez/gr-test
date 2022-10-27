@@ -11,15 +11,20 @@ const Messages = () => {
     const { uid } = useUsersStore(({ current }) => current);
     const { data } = useQuery(['messages'], getMessages.bind(null, uid), { refetchInterval: 500 });
 
+    const printId = participants => {
+        let user = Object.keys(participants).filter(id => id !== uid)[0];
+        return user;
+    }
+
     return (
         <div className='messages'>
-            {data && Array.isArray(data) && data.map(message => (
-                <Link to={`/messages/${message.participants.filter(id => id !== uid)[0]}`} className="messages__item-link">
+            {data && Array.isArray(data) && data.map((message,i) => (
+                <Link key={i} to={`/messages/${Object.keys(message.participants).filter(id => id !== uid)[0]}`} className="messages__item-link">
                     <div key={message.id} className="messages__item">
                         <img src="/anon-avatar.png" alt="" className="messages__item-image" />
                         <div className="messages__item-info">
                             <p className="messages__item-info-title">
-                                {message.participants[0] === uid ? message.participants[1] : message.participants[0]}
+                                {printId(message.participants)}
                             </p>
                             <p className="messages__item-info-message">
                                 {message.messages[message.messages.length - 1].message}

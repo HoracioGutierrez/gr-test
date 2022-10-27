@@ -101,12 +101,11 @@ export const getPrivateMessages = async (id, uid) => {
 }
 
 export const getPrivateMessagesQueryRef = async (id, uid) => {
-    return query(collection(db, 'messages'), where('participants', '==', {id:true, uid:true}))
+    return query(collection(db, 'messages'), where(`participants.${uid}`, '==', true), where(`participants.${id}`, '==', true))
 }
 
 export const getMessages = async (id) => {
     try {
-        //const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', 'array-contains', id)))
         const snapShot = await getDocs(query(collection(db, 'messages'), where(`participants.${id}`, '==', true)))
         const docs = snapShot.docs
         return docs.map(doc => doc.data())
@@ -118,7 +117,6 @@ export const getMessages = async (id) => {
 
 export const sendMessage = async (uid, message) => {
     try {
-        //const snapShot = await getDocs(query(collection(db, 'messages'), where('participants', '==', {[message.sender]:true, [message.receiver] : true})))
         const snapShot = await getDocs(query(collection(db, 'messages'), where(`participants.${message.sender}`, '==', true), where(`participants.${message.receiver}`, '==', true)))
         const doc = snapShot.docs[0]
         if (doc) {
