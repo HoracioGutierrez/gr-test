@@ -42,7 +42,7 @@ const MessagesPrivate = () => {
 
     const handleCamera = async () => {
         const image = await Camera.getPhoto({
-            quality: 10,
+            quality: 5,
             allowEditing: true,
             width : 300,
             height : 300,
@@ -50,10 +50,9 @@ const MessagesPrivate = () => {
             webUseInput: true
         });
 
-        var imageUrl = image.base64String;
         const imageLoc = `/images/${Math.random()}.${image.format}`;
 
-        const uploadTask = await uploadString(ref(storage, imageLoc), imageUrl, 'base64');
+        const uploadTask = await uploadString(ref(storage, imageLoc), image.base64String, 'base64');
 
         const url = await getDownloadURL(uploadTask.ref);
 
@@ -65,6 +64,7 @@ const MessagesPrivate = () => {
             unread: true,
             image: true
         }
+
         sendMessage(id, message)
             .then(() => {
                 setCurrentMessage('');
